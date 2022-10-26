@@ -2,13 +2,14 @@ import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { PulseLoader } from "react-spinners";
+import { useNavigate, useParams } from "react-router-dom";
+import { MoonLoader, PulseLoader } from "react-spinners";
 
 const UserDetails = () => {
   const [onePok, setOnePok] = useState(null);
   const { pokemon } = useParams();
-  console.log(pokemon);
+  let navigate = useNavigate();
+  // console.log(navigate);
 
   async function getPokemonDetails() {
     const detailsData = await axios(
@@ -20,8 +21,18 @@ const UserDetails = () => {
   //   getPokemonDetails();
   useEffect(() => {
     getPokemonDetails();
-  }, [pokemon]);
-  //   console.log(onePok);
+  }, []);
+  // console.log(onePok);
+  // console.log(Boolean({}), "Проверка");
+
+  function handleClick() {
+    let value = prompt("Вы уверены что хотите уйти?");
+    if (value === "да") {
+      navigate("/");
+    } else {
+      navigate("/users");
+    }
+  }
   return (
     <div>
       {onePok ? (
@@ -29,9 +40,10 @@ const UserDetails = () => {
           <img src={onePok.data.sprites.front_default} alt="" />
           <h2>{onePok.data.name}</h2>
           <h3>{onePok.data.height} см</h3>
+          <button onClick={handleClick}>Перейти на главную</button>
         </>
       ) : (
-        <PulseLoader color="#36d7b7" />
+        <MoonLoader color="#36d7b7" />
       )}
     </div>
   );
